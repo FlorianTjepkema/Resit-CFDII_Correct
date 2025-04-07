@@ -24,8 +24,8 @@ geomMap = cylinder();
 ## +++++++++++ corresponding to the manufactured solution +++++++ ##
 ## ++++++++++++++++++++++ in the lines below ++++++++++++++++++++ ##
 ## ============================================================== ##
-fx = lambda x, y: # Add x−component of the forcing term as a function of x and y
-fy = lambda x, y: # Add y−component of the forcing term as a function of x and y
+fx = lambda x, y: 384*x**4*y + 768*x**2*y**3 - 360*x**2*y - 2*x + 384*y**5 - 360*y**3 + 66*y # Add x−component of the forcing term as a function of x and y
+fy = lambda x, y: - 384*x**5 - 768*x**3*y**2 + 360*x**3 - 384*x*y**4 + 360*x*y**2 - 66*x - 2*y # Add y−component of the forcing term as a function of x and y
 ## ============================================================== ##
 ## ============================================================== ##
 
@@ -119,12 +119,12 @@ for i, p in enumerate(p_arr):
 	ax0.minorticks_on();
 	ax0.grid(visible = True, which = 'minor', color = '#999999', linestyle = '-', alpha = 0.2);
 	ax0.tick_params(axis = 'both', which = 'minor', labelsize = 10);
-	
+
 	ax0.set_xlabel(r'$\frac{1}{\sqrt{h_x h_y}}$');
 	ax0.set_ylabel(r'$|| u - u_{ex} ||_{L^2}$');
 	ax0.legend(bbox_to_anchor = (0., 1.01, 1., .102), loc = 'lower left',
 					ncol = 4, mode = 'expand', borderaxespad = 0.);
-	
+
 	# Error u in Hdiv
 	ax1.loglog(elem_h[i, :], error_lst[1, i, :], label = r'$p = %i$'%p);
 	slope = linregress(np.log10(elem_h[i, -2:]), np.log10(error_lst[1, i, -2:]))[0];
@@ -133,12 +133,12 @@ for i, p in enumerate(p_arr):
 	ax1.minorticks_on();
 	ax1.grid(visible = True, which = 'minor', color = '#999999', linestyle = '-', alpha = 0.2);
 	ax1.tick_params(axis = 'both', which = 'minor', labelsize = 10);
-	
+
 	ax1.set_xlabel(r'$\frac{1}{\sqrt{h_x h_y}}$');
 	ax1.set_ylabel(r'$\left(|| u - u_{ex} ||_{L^2}^2 + || \nabla \cdot u - \nabla \cdot u_{ex} ||_{L^2}^2 \right)^{\frac{1}{2}}$');
 	ax1.legend(bbox_to_anchor = (0., 1.01, 1., .102), loc = 'lower left',
 					ncol = 4, mode = 'expand', borderaxespad = 0.);
-	
+
 	# Error omega in L2
 	ax2.loglog(elem_h[i, :], error_lst[2, i, :], label = r'$p = %i$'%p);
 	slope = linregress(np.log10(elem_h[i, -2:]), np.log10(error_lst[2, i, -2:]))[0];
@@ -147,12 +147,12 @@ for i, p in enumerate(p_arr):
 	ax2.minorticks_on();
 	ax2.grid(visible = True, which = 'minor', color = '#999999', linestyle = '-', alpha = 0.2);
 	ax2.tick_params(axis = 'both', which = 'minor', labelsize = 10);
-	
+
 	ax2.set_xlabel(r'$\frac{1}{\sqrt{h_x h_y}}$');
 	ax2.set_ylabel(r'$|| \bar{\omega} - \omega_{ex} ||_{L^2}$');
 	ax2.legend(bbox_to_anchor = (0., 1.01, 1., .102), loc = 'lower left',
 					ncol = 4, mode = 'expand', borderaxespad = 0.);
-	
+
 	# Error omega in Hcurl
 	ax3.loglog(elem_h[i, :], error_lst[3, i, :], label = r'$p = %i$'%p);
 	slope = linregress(np.log10(elem_h[i, -2:]), np.log10(error_lst[3, i, -2:]))[0];
@@ -161,7 +161,7 @@ for i, p in enumerate(p_arr):
 	ax3.minorticks_on();
 	ax3.grid(visible = True, which = 'minor', color = '#999999', linestyle = '-', alpha = 0.2);
 	ax3.tick_params(axis = 'both', which = 'minor', labelsize = 10);
-	
+
 	ax3.set_xlabel(r'$\frac{1}{\sqrt{h_x h_y}}$');
 	ax3.set_ylabel(r'$\left(|| \bar{\omega} - \omega_{ex} ||_{L^2}^2 + || \nabla \times \bar{\omega} - \nabla \times \omega_{ex} ||_{L^2}^2\right)^{\frac{1}{2}}$');
 	ax3.legend(bbox_to_anchor = (0., 1.01, 1., .102), loc = 'lower left',
@@ -174,12 +174,20 @@ for i, p in enumerate(p_arr):
 	ax4.minorticks_on();
 	ax4.grid(visible = True, which = 'minor', color = '#999999', linestyle = '-', alpha = 0.2);
 	ax4.tick_params(axis = 'both', which = 'minor', labelsize = 10);
-	
+
 	ax4.set_xlabel(r'$\frac{1}{\sqrt{h_x h_y}}$');
 	ax4.set_ylabel(r'$|| \bar{p} - p_{ex} ||_{L^2}$');
 	ax4.legend(bbox_to_anchor = (0., 1.01, 1., .102), loc = 'lower left',
 					ncol = 4, mode = 'expand', borderaxespad = 0.);
 
 plt.show();
+
+fig0.savefig("error_u_L2.png", dpi=300, bbox_inches='tight')
+fig1.savefig("error_u_Hdiv.png", dpi=300, bbox_inches='tight')
+fig2.savefig("error_omega_L2.png", dpi=300, bbox_inches='tight')
+fig3.savefig("error_omega_Hcurl.png", dpi=300, bbox_inches='tight')
+fig4.savefig("error_pressure_L2.png", dpi=300, bbox_inches='tight')
+
 ## ============================================================== ##
 ## ============================================================== ##
+
