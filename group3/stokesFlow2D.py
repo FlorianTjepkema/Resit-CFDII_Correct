@@ -71,9 +71,9 @@ if __name__ == '__main__':
 	# Polynomial degree
 	p = 4;
 	# Number of elements in azimuthal-direction
-	N = 24;
+	N = 30;
 	# Number of elements in radial-direction
-	M = 4;
+	M = 5;
 	# Number of nodes to plot in
 	pRefined = p + 2;
 	# Geometry definition
@@ -135,3 +135,43 @@ if __name__ == '__main__':
 	plt.show();
 	## ============================================== ##
 	## ============================================== ##
+
+	# Plot of vorticity
+	vorticity_isoValues = np.arange(0, 4.2, 0.2);
+	fig = plt.figure();
+	ax = fig.add_subplot(111);
+	cax = ax.contourf(msh.xPlot, msh.yPlot, omega_Reconstruct, levels=vorticity_isoValues, extend='both');
+	ax.set_aspect('equal');
+	ax.set_xlabel(r'$x$');
+	ax.set_ylabel(r'$y$');
+	ax.set_title('Contour plot for Vorticity');
+	fig.colorbar(cax, orientation='vertical', label='Vorticity');
+	plt.show();
+
+	# Plot for streamlines
+	fig, ax = plt.subplots()
+	ax.set_aspect('equal')
+	cax = ax.contour(msh.xPlot, msh.yPlot, streamFunc_Reconstruct, levels=50, cmap='viridis')
+	ax.set_xlabel(r'$x$')
+	ax.set_ylabel(r'$y$')
+	ax.set_title('Contour plot for the streamlines')
+	fig.colorbar(cax, orientation='vertical', label='Stream Function')
+
+	# Plot for pointwise divergence
+	fig, ax = plt.subplots()
+	cmap = plt.cm.RdBu  # Diverging color map for divergence
+	cax = ax.pcolor(msh.xPlot, msh.yPlot, DIVu_Reconstruct, cmap=cmap, shading='auto')
+	ax.set_aspect('equal')
+	ax.set_xlabel(r'$x$')
+	ax.set_ylabel(r'$y$')
+	# Set axis limits explicitly
+	ax.set_xlim(np.min(msh.xPlot), np.max(msh.xPlot))
+	ax.set_ylim(np.min(msh.yPlot), np.max(msh.yPlot))
+
+	# Adjust the aspect ratio
+	ax.set_aspect('equal', adjustable='box')
+
+	ax.set_title('Contour plot for the pointwise divergence')
+	fig.colorbar(cax, orientation='vertical', label='Divergence')
+
+	plt.show()
