@@ -140,7 +140,7 @@ if __name__ == '__main__':
 	# Polynomial degree
 	p = 4;
 	# Number of elements in azimuthal-direction
-	N = 16;
+	N = 30;
 	# Number of elements in radial-direction
 	M = 4;
 	# Number of nodes to plot in
@@ -148,7 +148,7 @@ if __name__ == '__main__':
 	# Time step size
 	dt = 1e-3;
 	# Number of time steps
-	Ndt = 101;
+	Ndt = 10001;
 	# Reynolds number
 	Re = 50;
 	# Geometry definition
@@ -198,9 +198,9 @@ if __name__ == '__main__':
 
 	# Reconstruct solution (Note, this reconstruction can be very memory intensive for fine meshes with many time steps.
 	# To save cost, you can slice the array so as to reconstruct only a select few time steps instead of all the time steps)
-	# omega_Reconstruct = msh.gridit((psi0_plot@omega).reshape(-1, msh.nPlot_x, msh.nPlot_y, Ndt));
-	# streamFunc_Reconstruct = msh.gridit((psi0_plot@streamFunc).reshape(-1, msh.nPlot_x, msh.nPlot_y, Ndt));
-	# DIVu_Reconstruct = msh.gridit((psi2_plot@DIVu).reshape(-1, msh.nPlot_x, msh.nPlot_y, Ndt));
+	omega_Reconstruct = msh.gridit((psi0_plot@omega).reshape(-1, msh.nPlot_x, msh.nPlot_y, Ndt));
+	streamFunc_Reconstruct = msh.gridit((psi0_plot@streamFunc).reshape(-1, msh.nPlot_x, msh.nPlot_y, Ndt));
+	DIVu_Reconstruct = msh.gridit((psi2_plot@DIVu).reshape(-1, msh.nPlot_x, msh.nPlot_y, Ndt));
 	# p_Reconstruct = msh.gridit((psi2_plot@pressure).reshape(-1, msh.nPlot_x, msh.nPlot_y, Ndt));
 	u_Reconstruct = msh.gridit((psi1x_plot@u).reshape(-1, msh.nPlot_x, msh.nPlot_y, Ndt));
 	v_Reconstruct = msh.gridit((psi1y_plot@u).reshape(-1, msh.nPlot_x, msh.nPlot_y, Ndt));
@@ -211,7 +211,7 @@ if __name__ == '__main__':
 	skip_frames = 20;
 	u_magnitude_plot = u_magnitude[..., ::skip_frames];
 	t_arr_plot = t_arr[::skip_frames];
-	levels = np.linspace(0, 10, 25);
+	levels = np.linspace(0, 9, 25);
 	fig = plt.figure(figsize = (10, 8));
 	ax = fig.add_subplot(111);
 	ax.set_xlabel(r'$x$');
@@ -250,3 +250,76 @@ if __name__ == '__main__':
 	
 	## ============================================== ##
 	## ============================================== ##
+
+	# static_timeStamps = (np.linspace(0, 1, 5) * (Ndt - 1)).astype(int);
+	# for i in static_timeStamps[1:]:
+	# 	# Plot of vorticity
+	# 	fig = plt.figure('t = %0.1f' % t_arr[i]);
+	# 	ax = fig.add_subplot(111);
+	# 	ax.set_xlabel(r'$x$');
+	# 	ax.set_ylabel(r'$y$');
+	# 	ax.set_aspect('equal');
+	# 	ax.set_title('Contour plot for the vorticity')
+	# 	cax = ax.contourf(msh.xPlot, msh.yPlot, omega_Reconstruct[..., i], levels=levels, cmap=plt.cm.twilight_shifted,
+	# 					  extend='both');
+	# 	fig.colorbar(cax, orientation='vertical', label='Vorticity');
+	#
+	# 	# Now implement your own plotting routine for the streamlines, the divergence plots, etc
+	# 	# Plot for streamlines
+	# 	fig, ax = plt.subplots()
+	# 	fig.suptitle('t = %0.1f' % t_arr[i])  # Add a title with time
+	# 	ax.set_aspect('equal')
+	# 	cax = ax.contour(msh.xPlot, msh.yPlot, streamFunc_Reconstruct[..., i], levels=50, cmap='viridis')
+	# 	ax.set_xlabel(r'$x$')
+	# 	ax.set_ylabel(r'$y$')
+	# 	ax.set_title('Contour plot for the streamlines')
+	# 	fig.colorbar(cax, orientation='vertical', label='Stream Function')
+	#
+	# 	# Plot for pointwise divergence
+	# 	fig, ax = plt.subplots()
+	# 	fig.suptitle('t = %0.1f' % t_arr[i])  # Add a title with time
+	# 	cmap = plt.cm.RdBu  # Diverging color map for divergence
+	# 	cax = ax.pcolor(msh.xPlot, msh.yPlot, DIVu_Reconstruct[..., i], cmap=cmap, shading='auto')
+	# 	ax.set_aspect('equal')
+	# 	ax.set_xlabel(r'$x$')
+	# 	ax.set_ylabel(r'$y$')
+	# 	ax.set_title('Contour plot for the pointwise divergence')
+	# 	fig.colorbar(cax, orientation='vertical', label='Divergence')
+	#
+	# plt.show();
+	# Only plot the last timestep
+	last_timestep = static_timeStamps[-1]  # Get the last time step
+
+	# Plot of vorticity
+	fig = plt.figure('t = %0.1f' % t_arr[last_timestep]);
+	ax = fig.add_subplot(111);
+	ax.set_xlabel(r'$x$');
+	ax.set_ylabel(r'$y$');
+	ax.set_aspect('equal');
+	ax.set_title('Contour plot for the vorticity')
+	cax = ax.contourf(msh.xPlot, msh.yPlot, omega_Reconstruct[..., last_timestep], cmap=plt.cm.twilight_shifted, extend='both');
+	fig.colorbar(cax, orientation='vertical', label='Vorticity');
+
+	# Plot for streamlines
+	fig, ax = plt.subplots()
+	fig.suptitle('t = %0.1f' % t_arr[last_timestep])  # Add a title with time
+	ax.set_aspect('equal')
+	cax = ax.contour(msh.xPlot, msh.yPlot, streamFunc_Reconstruct[..., last_timestep], levels=50, cmap='viridis')
+	ax.set_xlabel(r'$x$')
+	ax.set_ylabel(r'$y$')
+	ax.set_title('Contour plot for the streamlines')
+	fig.colorbar(cax, orientation='vertical', label='Stream Function')
+
+	# Plot for pointwise divergence
+	fig, ax = plt.subplots()
+	fig.suptitle('t = %0.1f' % t_arr[last_timestep])  # Add a title with time
+	cmap = plt.cm.RdBu  # Diverging color map for divergence
+	cax = ax.pcolor(msh.xPlot, msh.yPlot, DIVu_Reconstruct[..., last_timestep], cmap=cmap, shading='auto')
+	ax.set_aspect('equal')
+	ax.set_xlabel(r'$x$')
+	ax.set_ylabel(r'$y$')
+	ax.set_title('Contour plot for the pointwise divergence')
+	fig.colorbar(cax, orientation='vertical', label='Divergence')
+
+	plt.show();
+
