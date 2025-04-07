@@ -137,10 +137,10 @@ if __name__ == '__main__':
 	## ============================================== ##
 
 	# Plot of vorticity
-	#vorticity_isoValues = np.arange(0, 4.2, 0.2);
+	vorticity_isoValues = np.arange(-100, 100, 1);
 	fig = plt.figure();
 	ax = fig.add_subplot(111);
-	cax = ax.contourf(msh.xPlot, msh.yPlot, omega_Reconstruct, extend='both', cmap=plt.cm.twilight_shifted); #, levels=vorticity_isoValues
+	cax = ax.contourf(msh.xPlot, msh.yPlot, omega_Reconstruct, levels= vorticity_isoValues, extend='both', cmap=plt.cm.twilight_shifted); #, levels=vorticity_isoValues
 	ax.set_aspect('equal');
 	ax.set_xlabel(r'$x$');
 	ax.set_ylabel(r'$y$');

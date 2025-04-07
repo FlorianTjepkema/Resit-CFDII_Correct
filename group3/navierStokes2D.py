@@ -289,6 +289,7 @@ if __name__ == '__main__':
 	# plt.show();
 	# Only plot the last timestep
 	last_timestep = static_timeStamps[-1]  # Get the last time step
+	vorticity_isoValues = np.arange(-100, 100, 1); #Schaal plotten
 
 	# Plot of vorticity
 	fig = plt.figure('t = %0.1f' % t_arr[last_timestep]);
@@ -297,7 +298,7 @@ if __name__ == '__main__':
 	ax.set_ylabel(r'$y$');
 	ax.set_aspect('equal');
 	ax.set_title('Contour plot for the vorticity')
-	cax = ax.contourf(msh.xPlot, msh.yPlot, omega_Reconstruct[..., last_timestep], cmap=plt.cm.twilight_shifted, extend='both');
+	cax = ax.contourf(msh.xPlot, msh.yPlot, omega_Reconstruct[..., last_timestep], levels=vorticity_isoValues, cmap=plt.cm.twilight_shifted, extend='both');
 	fig.colorbar(cax, orientation='vertical', label='Vorticity');
 
 	# Plot for streamlines
