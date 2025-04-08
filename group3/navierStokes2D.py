@@ -129,6 +129,7 @@ def navierStokesSolver(msh: mesh.mesh2D, sem: mimeticSEM.SEM2D, dt, Ndt, Re, fx,
 			pickle.dump({'t_arr': t_arr, 'omega': omega, 'u': u, 'pressure': pressure, 'streamFunc': streamFunc, 'DIVu': DIVu}, file);
 			file.close();
 	print('-----------Solve completed');
+	print('Reynolds number is:', Re)
 	return t_arr, omega, u, pressure, streamFunc, DIVu;
 ## ============================================== ##
 ## ============================================== ##
@@ -150,7 +151,7 @@ if __name__ == '__main__':
 	# Number of time steps
 	Ndt = 10001;
 	# Reynolds number
-	Re = 50;
+	Re = 5000;
 	# Geometry definition
 	geomMap = cylinder();
 	# Source term of PDE
@@ -323,4 +324,41 @@ if __name__ == '__main__':
 	fig.colorbar(cax, orientation='vertical', label='Divergence')
 
 	plt.show();
+
+
+	# Integral of the vorticity plot over time
+	# Ensure t_arr matches the length of integral_omega
+	t_arr = t_arr[:integral_omega.shape[0]]
+	t_arr_steps = t_arr * 1000
+
+	# Plot the integral of omega over time
+	plt.figure(figsize=(10, 6))
+	plt.plot(t_arr_steps, integral_omega, label=r'$\int_{\Omega} \omega \, d\Omega$', color='b', lw=2)
+	plt.xlabel('Timesteps', fontsize=14)
+	plt.ylabel('Integral of Vorticity', fontsize=14)
+	plt.title('Integral of Vorticity Over Time', fontsize=16)
+	plt.grid(True)
+	plt.legend()
+	plt.show()
+
+
+	# Added to define the values of y, the position of x and the indices of the matrix from which the plot will be made
+	y_values = msh.yPlot[:, 0]  # y-coordinates from the mesh grid
+	plt.plot(u_Reconstruct[:, np.abs(msh.xPlot[0, :] - 0).argmin(), -1], y_values, label=f"x = {0}")
+	plt.plot(-v_Reconstruct[:, np.abs(msh.xPlot[0, :] - 0.5 * np.pi).argmin(), -1], y_values, label=f"x = {0.5 * np.pi}")
+	plt.plot(-u_Reconstruct[:, np.abs(msh.xPlot[0, :] - np.pi).argmin(), -1], y_values, label=f"x = {np.pi}")
+	plt.plot(v_Reconstruct[:, np.abs(msh.xPlot[0, :] - 1.5 * np.pi).argmin(), -1], y_values, label=f"x = {1.5 * np.pi}")
+
+	# Add boundary conditions for reference
+	plt.axhline(0.5, color='black', linestyle='--', label="Inner circle")
+	plt.axhline(1, color='red', linestyle='--', label="Outer circle")
+
+	# Customize plot
+	plt.title("Velocity Profile of u_r vs r")
+	plt.xlabel("u_r")
+	plt.ylabel("r")
+	plt.legend()
+	plt.grid()
+	plt.show()
+
 
