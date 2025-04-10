@@ -151,7 +151,7 @@ if __name__ == '__main__':
 	# Number of time steps
 	Ndt = 10001;
 	# Reynolds number
-	Re = 1000;
+	Re = 50;
 	# Geometry definition
 	geomMap = cylinder();
 	# Source term of PDE
@@ -343,81 +343,26 @@ if __name__ == '__main__':
 	plt.show()
 
 
+
 	# Added to define the values of y, the position of x and the indices of the matrix from which the plot will be made
-	x_values = msh.xPlot[:, 0] # x-coordinates from the mesh grid
+	x_values = msh.xPlot[:, 0]  # x-coordinates from the mesh grid
 	y_values = msh.yPlot[:, 0]  # y-coordinates from the mesh grid
 	r_values = [0.5, 1.0]
 	theta_values = [0, 0.5 * np.pi, np.pi]
-	plt.plot(u_Reconstruct[:, np.abs(msh.xPlot[0, :] - 0).argmin(), -1], y_values, label=f"$\\theta = {0}")
-	plt.plot(-v_Reconstruct[:, np.abs(msh.xPlot[0, :] - 1/2 * np.pi).argmin(), -1], y_values, label='1/2 π')
-	plt.plot(-u_Reconstruct[:, np.abs(msh.xPlot[0, :] - np.pi).argmin(), -1], y_values, label= 'π')
-	#plt.plot(v_Reconstruct[:, np.abs(msh.xPlot[0, :] - 1.5 * np.pi).argmin(), -1], -y_values, label= '3/2 \pi')
-
-	# Print the values for u_r at the boundaries for all velocity profiles
-	for theta in theta_values:
-		for r in r_values:
-			# Find the closest mesh points corresponding to the selected theta and radius
-			x_index = np.abs(msh.xPlot[0, :] - r).argmin()  # Find the closest radial index
-			y_index = np.abs(msh.yPlot[:, 0] - r).argmin()  # Find the closest angular index
-
-			# Extract the tangential velocity u at the given position
-			u_theta_value = u_Reconstruct[y_index, x_index, -1]  # At the last time step
-
-			# Print the tangential velocity at the specific position
-			print(f"At θ = {theta:.2f}, r = {r}: u_θ = {u_theta_value:.4f}")
+	plt.plot(-v_Reconstruct[:, np.abs(msh.xPlot[0, :] - 0).argmin(), -1], y_values, label=r"$u_{\theta}$ = 0")
+	plt.plot(-v_Reconstruct[:, np.abs(msh.xPlot[0, :] - 1 / 2 * np.pi).argmin(), -1], y_values, label='1/2 π')
+	plt.plot(v_Reconstruct[:, np.abs(msh.xPlot[0, :] + 1 / 2 * np.pi).argmin(), -1], y_values, label='-1/2 π')
 
 	# Add boundary conditions for reference
 	plt.axhline(0.5, color='black', linestyle='--', label="Inner circle")
 	plt.axhline(1, color='red', linestyle='--', label="Outer circle")
 
 	# Customize plot
-	plt.title("Velocity Profile of u_t vs r")
-	plt.xlabel("u_t")
+	plt.title(r"Velocity Profile of $u_{\theta}$ vs r")
+	plt.xlabel(r"u_$\theta$")
 	plt.ylabel("r")
 	plt.legend()
 	plt.grid()
 	plt.show()
 
-	# # Define the y values (radius positions) and the specific x positions where you want the velocity profile
-	# y_values = msh.yPlot[:, 0]  # y-coordinates from the mesh grid (corresponding to radius values)
-	# x_positions = [0, 0.5 * np.pi, np.pi, 1.5 * np.pi]  # Locations for the velocity profile
 	#
-	# # Extract the corresponding indices of x in the mesh for the selected positions
-	# x_indices = [np.abs(msh.xPlot[0, :] - x).argmin() for x in x_positions]
-	#
-	# # Create a plot for the tangential velocity
-	# plt.figure(figsize=(8, 6))
-	#
-	# # Loop over the selected x positions and plot the tangential velocity at each position
-	# for idx, x_pos in zip(x_indices, x_positions):
-	# 	# Mask the radius values to stay within the physical boundaries (0.5 <= r <= 1)
-	# 	mask = (y_values >= 0.5) & (y_values <= 1)
-	#
-	# 	# Apply the mask to the y-values (radius) and corresponding tangential velocity
-	# 	r_values = y_values[mask]
-	# 	u_theta_values = u_Reconstruct[:, idx, -1][mask]
-	#
-	# 	# Plot the data
-	# 	if x_pos == 0:  # At x = 0, use the normal velocity (outer cylinder)
-	# 		plt.plot(u_theta_values, r_values, label=f"x = {x_pos:.2f} radians (Outer)")
-	# 	elif x_pos == np.pi:  # At x = π, use the normal velocity (inner cylinder)
-	# 		plt.plot(u_theta_values, r_values, label=f"x = {x_pos:.2f} radians (Inner)")
-	# 	elif x_pos == 0.5 * np.pi:  # Reverse velocity at 0.5π (adjust direction)
-	# 		plt.plot(-u_theta_values, r_values, label=f"x = {x_pos:.2f} radians")
-	# 	elif x_pos == 1.5 * np.pi:  # Reverse velocity at 1.5π (adjust direction)
-	# 		plt.plot(-u_theta_values, r_values, label=f"x = {x_pos:.2f} radians")
-	#
-	# # Add boundary conditions for reference
-	# plt.axhline(0.5, color='black', linestyle='--', label="Inner circle (r = 0.5)")
-	# plt.axhline(1, color='red', linestyle='--', label="Outer circle (r = 1)")
-	#
-	# # Customize the plot
-	# plt.title("Tangential Velocity $u_\\theta$ vs Radius $r$")
-	# plt.xlabel("Tangential Velocity ($u_\\theta$)")
-	# plt.ylabel("Radius $r$")
-	# plt.legend()
-	# plt.grid(True)
-	# plt.tight_layout()
-	# plt.show()
-
-
