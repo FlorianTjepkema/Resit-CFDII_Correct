@@ -349,7 +349,7 @@ if __name__ == '__main__':
 	y_values = msh.yPlot[:, 0]  # y-coordinates from the mesh grid
 	r_values = [0.5, 1.0]
 	theta_values = [0, 0.5 * np.pi, np.pi]
-	plt.plot(-v_Reconstruct[:, np.abs(msh.xPlot[0, :] - 0).argmin(), -1], y_values, label=r"$u_{\theta}$ = 0")
+	plt.plot(-v_Reconstruct[:, np.abs(msh.xPlot[0, :] - 0).argmin(), -1], y_values, label=r"$\theta$ = 0")
 	plt.plot(-v_Reconstruct[:, np.abs(msh.xPlot[0, :] - 1 / 2 * np.pi).argmin(), -1], y_values, label='1/2 π')
 	plt.plot(v_Reconstruct[:, np.abs(msh.xPlot[0, :] + 1 / 2 * np.pi).argmin(), -1], y_values, label='-1/2 π')
 
@@ -359,7 +359,7 @@ if __name__ == '__main__':
 
 	# Customize plot
 	plt.title(r"Velocity Profile of $u_{\theta}$ vs r")
-	plt.xlabel(r"u_$\theta$")
+	plt.xlabel(r"$u_{\theta}$")
 	plt.ylabel("r")
 	plt.legend()
 	plt.grid()
